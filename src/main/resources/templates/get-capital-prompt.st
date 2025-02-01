@@ -1,1 +1,1 @@
-What is a capital of {stateOrCountry}?
+What is a capital of {stateOrCountry}? {format}

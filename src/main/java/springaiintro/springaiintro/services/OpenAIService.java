@@ -1,8 +1,6 @@
 package springaiintro.springaiintro.services;
 
-import springaiintro.springaiintro.models.Answer;
-import springaiintro.springaiintro.models.GetCapitalRequest;
-import springaiintro.springaiintro.models.Question;
+import springaiintro.springaiintro.models.*;
 
 public interface OpenAIService {
 
@@ -10,5 +8,5 @@ public interface OpenAIService {
 
     Answer getAnswer(Question question);
 
-    Answer getCapital(GetCapitalRequest getCapitalRequest);
+    GetCapitalResponseWithInfo getCapital(GetCapitalRequest getCapitalRequest);
 }

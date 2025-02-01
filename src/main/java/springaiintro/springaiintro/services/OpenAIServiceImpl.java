@@ -4,13 +4,12 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import springaiintro.springaiintro.models.Answer;
-import springaiintro.springaiintro.models.GetCapitalRequest;
-import springaiintro.springaiintro.models.Question;
+import springaiintro.springaiintro.models.*;
 
 import java.util.Map;
 
@@ -27,13 +26,16 @@ public class OpenAIServiceImpl implements OpenAIService {
     private Resource getCapitalPrompt;
 
     @Override
-    public Answer getCapital(GetCapitalRequest getCapitalRequest) {
+    public GetCapitalResponseWithInfo getCapital(GetCapitalRequest getCapitalRequest) {
+        BeanOutputConverter<GetCapitalResponseWithInfo> beanOutputConverter = new BeanOutputConverter<>(GetCapitalResponseWithInfo.class);
+        String format = beanOutputConverter.getFormat();
         PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
-        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry()));
+        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                "format", format));
 
         ChatResponse response = chatModel.call(prompt);
 
-        return new Answer(response.getResult().getOutput().getContent());
+        return beanOutputConverter.convert(response.getResult().getOutput().getContent());
     }
 
     @Override
